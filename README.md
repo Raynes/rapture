@@ -16,7 +16,7 @@ Rapture is super simple. The only thing you need to run it is Erlang 15 or highe
 Go fetch that. Shouldn't be hard to install at all.
 
 Now you have two options. You can get my cross platform rapture binary from
-[here](http://raynes.me/files/rapture) (just pick the newest version), or you can
+[here](http://raynes.me/rapture) (just pick the newest version), or you can
 get the repo and compile it yourself. If you choose to do the latter, you'll
 have to install [Elixir](http://elixir-lang.org) and run `mix escriptize` in the
 rapture project directory.
