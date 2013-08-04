@@ -1,9 +1,9 @@
-defmodule Sow.Mixfile do
+defmodule Rapture.Mixfile do
   use Mix.Project
 
   def project do
-    [ app: :sow,
-      version: "0.0.1",
+    [ app: :rapture,
+      version: "0.1.1",
       elixir: "~> 0.10.0",
       deps: deps ]
   end

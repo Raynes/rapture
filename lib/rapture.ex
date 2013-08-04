@@ -1,4 +1,4 @@
-defmodule Sow do
+defmodule Rapture do
   def slurp_stdin do
     IO.stream(:stdio) |> Enum.join
   end
@@ -12,7 +12,7 @@ defmodule Sow do
     if copier do
       {x, y, z} = :erlang.now
       timestamp = Enum.reduce([x, y, z], "", fn n, acc -> acc <> integer_to_binary(n) end)
-      filename = Path.join(System.tmp_dir, ".sow-" <> timestamp)
+      filename = Path.join(System.tmp_dir, ".rapture-" <> timestamp)
       if File.write(filename, text) == :ok do
         System.cmd "cat #{filename} | #{copier}"
         File.rm filename
@@ -35,7 +35,7 @@ defmodule Sow do
   def get_auth_file do
     home = System.user_home
     if home do
-      case File.read(Path.join(home, ".sow")) do
+      case File.read(Path.join(home, ".rapture")) do
         {:ok, contents} -> parse_auth_file contents
         {:error, _} = error -> error
       end
