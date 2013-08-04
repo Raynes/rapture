@@ -1,4 +1,7 @@
 defmodule Rapture do
+
+  @version "0.1.1"
+
   def slurp_stdin do
     IO.stream(:stdio) |> Enum.join
   end
@@ -83,16 +86,45 @@ defmodule Rapture do
       {:ok, json} ->
         url = json["url"]
         IO.puts url
-        copy_text url
+        unless opts[:no_copy], do: copy_text url
       _           -> IO.puts "The end is neigh."
     end
+  end
+
+  def help do
+    """
+    rapture v#{@version}
+
+    Options:
+     -p, --private:  If passed, makes the paste private.
+     -l, --language: Sets the paste language. Defaults to "Plain Text".
+     -u, --user:     Sets the authenticating user. Always used with --token.
+     -t, --token:    Sets the authenticating token. Always used with --user.
+     -c, --no-copy:  Don't automatically copy to the clipboard.
+
+    If no file argument is passed, rapture listens on stdin for text
+    and pastes it when it receives EOF. If a file is passed, the
+    contents of that file are pasted and, assuming no --language arg
+    was passed, an attempt is made to determine the language based
+    on file extension.
+
+    After the paste is created, rapture will print the URL to the
+    paste and will try to copy it to the clipboard using pbcopy on
+    OS X and xclip on other unixes. If the OS is not unix, no
+    attempt is made to copy to clipboard.
+    """
   end
 
   def main(opts) do
     Reap.start
     {switches, file} = OptionParser.parse(opts,
-      aliases: [l: :language, p: :private, u: :user, t: :token],
+      aliases: [l: :language, p: :private, u: :user, t: :token, h: :help,
+                c: :no_copy, v: :version],
       switches: [private: :boolean])
-    create_paste switches, file
+    cond do
+      switches[:help] -> IO.puts help
+      switches[:version] -> IO.puts @version
+      true -> create_paste switches, file
+    end
   end
 end
