@@ -33,3 +33,19 @@ $ rapture somefile.ex          # create a paste where language is determined by
 ```
 
 And that's about it.
+
+## Authentication
+
+If you'd like to paste as your own user, you should go
+[get an API key](https://www.refheap.com/api) and then configure rapture to use
+it. There are two ways to do this. The best way is to create a file called
+`~/.rapture` and put the following in it:
+
+```
+your username
+your token
+```
+
+That's it. Two lines.
+
+The other way you can do this is per-call. You can pass `--user` and `--token`.
