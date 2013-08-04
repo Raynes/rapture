@@ -12,7 +12,7 @@ Elixir filled that hole for me.
 
 ## Usage
 
-Rapture is super simple. The only thing you need to run it is Erlang 15 or higher.
+Rapture is super simple. The only thing you need to run it is Erlang 16B or higher.
 Go fetch that. Shouldn't be hard to install at all.
 
 Now you have two options. You can get my cross platform rapture binary from
