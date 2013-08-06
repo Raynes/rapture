@@ -3,7 +3,7 @@ defmodule Rapture.Mixfile do
 
   def project do
     [ app: :rapture,
-      version: "0.1.2",
+      version: "0.1.3",
       elixir: "~> 0.10.0",
       deps: deps ]
   end

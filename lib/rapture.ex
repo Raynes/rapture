@@ -1,6 +1,6 @@
 defmodule Rapture do
 
-  @version "0.1.2"
+  @version "0.1.3"
 
   def slurp_stdin do
     IO.stream(:stdio) |> Enum.join
@@ -9,7 +9,7 @@ defmodule Rapture do
   def copy_text(text) do
     copier = case :os.type do
       {:unix, :darwin} -> "pbcopy"
-      {:unix, _} -> "xclip"
+      {:unix, _} -> "xclip -selection clipboard"
       _ -> nil
     end
     if copier do
