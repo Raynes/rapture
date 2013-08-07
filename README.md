@@ -41,11 +41,21 @@ If you'd like to paste as your own user, you should go
 it. There are two ways to do this. The best way is to create a file called
 `~/.rapture` and put the following in it:
 
-```
-your username
-your token
+```toml
+user = "your username"
+token = "your token"
 ```
 
-That's it. Two lines.
-
+This configuration file is in the toml format. All you need are those two lines.
 The other way you can do this is per-call. You can pass `--user` and `--token`.
+
+## Using A Different Refheap
+
+If you happen to host your own version of refheap or something, you can set the
+API url that rapture uses in your config file. Just add
+
+```toml
+url = "https://myrefheap.com/api"
+```
+
+Alternatively, you can pass this as an argument via `--url`.
