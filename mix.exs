@@ -16,6 +16,7 @@ defmodule Rapture.Mixfile do
   # Returns the list of dependencies in the format:
   # { :foobar, "0.1", git: "https://github.com/elixir-lang/foobar.git" }
   defp deps do
-    [{:reap, "~> 0.1.1", github: "Raynes/reap", ref: "f55dfd631f5afdb36d3e43350dd40cd66d69aa60"}]
+    [{:reap, "~> 0.1.2", github: "Raynes/reap", tag: "v0.1.2"},
+     {:etoml, "~> 0.1", github: "kalta/etoml"}]
   end
 end

@@ -26,37 +26,29 @@ defmodule Rapture do
     end
   end
 
-  def parse_auth_file(data) do
-    lines = String.split(data, "\n")
-    if Enum.count(lines) >= 2 do
-      {:ok, [username: Enum.at(lines, 0), token: Enum.at(lines, 1)]}
-    else
-      {:error, :badformat}
-    end
-  end
-
-  def get_auth_file do
+  def get_config do
     home = System.user_home
     if home do
       case File.read(Path.join(home, ".rapture")) do
-        {:ok, contents} -> parse_auth_file contents
-        {:error, _} = error -> error
+        {:ok, contents} ->
+          case :etoml.parse(contents) do
+            {:ok, config} -> config
+            _ -> []
+          end
+        {:error, _} -> []
       end
     else
-      {:error, :nohome}
+      []
     end
   end
 
-  def get_auth(opts) do
-    user = opts[:user]
-    token = opts[:token]
-    if opts && token do
+  def get_auth(opts, config) do
+    user = opts[:user] || config["user"]
+    token = opts[:token] || config["token"]
+    if user && token do
       [username: user, token: token]
     else
-      case get_auth_file do
-        {:ok, auth} -> auth
-        {:error, _} -> [] # Fine then, no auth. God.
-      end
+      [] # No auth.
     end
   end
 
@@ -72,17 +64,18 @@ defmodule Rapture do
   def get_extension([]), do: nil
   def get_extension([file]), do: Path.extname file
 
-  def format_opts(opts, file) do
+  def format_opts(opts, config, file) do
     reap_opts = Dict.take(opts, [:language, :private])
     language = reap_opts[:language] || get_extension(file) || "Plain Text"
-    Dict.merge(get_auth(opts), reap_opts) |>
+    Dict.merge(get_auth(opts, config), reap_opts) |>
     Dict.put(:language, language) |>
     Dict.put(:contents, get_contents(file))
   end
 
-
   def create_paste(opts, files) do
-    case Reap.request(:post, "/paste", format_opts(opts, files)) do
+    config = get_config
+    url = opts[:url] || config["url"] || "https://www.refheap.com/api"
+    case Reap.request(:post, "/paste", format_opts(opts, config, files), url) do
       {:ok, json} ->
         url = json["url"]
         IO.puts url
@@ -101,6 +94,7 @@ defmodule Rapture do
      -u, --user:     Sets the authenticating user. Always used with --token.
      -t, --token:    Sets the authenticating token. Always used with --user.
      -c, --no-copy:  Don't automatically copy to the clipboard.
+     --url:          Specify a non-default refheap API url.
 
     If no file argument is passed, rapture listens on stdin for text
     and pastes it when it receives EOF. If a file is passed, the
