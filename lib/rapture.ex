@@ -1,6 +1,6 @@
 defmodule Rapture do
 
-  @version "0.1.3"
+  @version "0.1.4"
 
   def slurp_stdin do
     IO.stream(:stdio) |> Enum.join
