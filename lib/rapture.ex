@@ -3,7 +3,7 @@ defmodule Rapture do
   @version "0.1.4"
 
   def slurp_stdin do
-    IO.stream(:stdio) |> Enum.join
+    IO.stream(:stdio, :line) |> Enum.join
   end
 
   def copy_text(text) do
@@ -43,8 +43,8 @@ defmodule Rapture do
   end
 
   def get_auth(opts, config) do
-    user = opts[:user] || config["user"]
-    token = opts[:token] || config["token"]
+    user = opts[:user]
+    token = opts[:token]
     if user && token do
       [username: user, token: token]
     else
@@ -74,7 +74,7 @@ defmodule Rapture do
 
   def create_paste(opts, files) do
     config = get_config
-    url = opts[:url] || config["url"] || "https://www.refheap.com/api"
+    url = opts[:url] || "https://www.refheap.com/api"
     case Reap.request(:post, "/paste", format_opts(opts, config, files), url) do
       {:ok, json} ->
         url = json["url"]
@@ -111,10 +111,11 @@ defmodule Rapture do
 
   def main(opts) do
     Reap.start
-    {switches, file} = OptionParser.parse(opts,
-      aliases: [l: :language, p: :private, u: :user, t: :token, h: :help,
-                c: :no_copy, v: :version],
-      switches: [private: :boolean])
+    {switches, file, _} = OptionParser.parse(opts,
+                                             aliases: [l: :language, p: :private, u: :user,
+                                                       t: :token, h: :help, c: :no_copy,
+                                                       v: :version],
+                                             switches: [private: :boolean])
     cond do
       switches[:help] -> IO.puts help
       switches[:version] -> IO.puts @version
