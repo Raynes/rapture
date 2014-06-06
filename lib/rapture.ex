@@ -42,7 +42,7 @@ defmodule Rapture do
     end
   end
 
-  def get_auth(opts, config) do
+  def get_auth(opts) do
     user = opts[:user]
     token = opts[:token]
     if user && token do
@@ -67,7 +67,7 @@ defmodule Rapture do
   def format_opts(opts, config, file) do
     reap_opts = Dict.take(opts, [:language, :private])
     language = reap_opts[:language] || get_extension(file) || "Plain Text"
-    Dict.merge(get_auth(opts, config), reap_opts) |>
+    Dict.merge(get_auth(opts), reap_opts) |>
     Dict.put(:language, language) |>
     Dict.put(:contents, get_contents(file))
   end
